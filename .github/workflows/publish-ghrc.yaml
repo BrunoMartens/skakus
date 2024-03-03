@@ -1,0 +1,24 @@
+name: Docker Images CI for GHRC
+
+on:
+    push
+
+jobs:
+    build_and_publish:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Docker login
+              run: docker login --username BrunoMartens --password ${{ secrets.GHRC_PAT }} ghcr.io
+            - name: Build and push skakus-ui
+              run: |
+                docker build -f skakus.angular/Dockerfile . --tag ghcr.io/brunomartens/skakus-ui:latest
+                docker push ghcr.io/brunomartens/skakus-ui:latest
+            - name: Build and push skakus-api
+              run: |
+                docker build -f skakus.api/Dockerfile . --tag ghcr.io/brunomartens/skakus-api:latest
+                docker push ghcr.io/brunomartens/skakus-api:latest
+            - name: Build and push skakus-yarp
+              run: |
+                docker build -f skakus.yarp/Dockerfile . --tag ghcr.io/brunomartens/skakus-yarp:latest
+                docker push ghcr.io/brunomartens/skakus-yarp:latest
