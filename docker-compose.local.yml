@@ -48,7 +48,7 @@ services:
       - '1433:1433'
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=_rooTrooT0
+      - MSSQL_SA_PASSWORD=myF4ncyP4ssw0rd!
 networks:
   skakus-net:
     name: skakus-net
