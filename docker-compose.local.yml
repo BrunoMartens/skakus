@@ -1,0 +1,55 @@
+version: 'v2'
+services:
+  skakus-yarp:
+    container_name: skakus-yarp
+    networks:
+      - skakus-net
+    build:
+      context: .
+      dockerfile: skakus.yarp/Dockerfile
+    ports:
+      - '80:8080'
+    restart: always
+    depends_on:
+      - skakus-api
+      - skakus-ui
+  skakus-ui:
+    container_name: skakus-ui
+    networks:
+      - skakus-net
+    build:
+      context: .
+      dockerfile: skakus.angular/Dockerfile
+    ports:
+      - '8080:8080'
+    restart: always
+    depends_on:
+      - skakus-api
+  skakus-api:
+    container_name: skakus-api
+    networks:
+      - skakus-net
+    build:
+      context: .
+      dockerfile: skakus.api/Dockerfile
+    ports:
+      - '8081:8080'
+    environment:
+      - SKAKUS_CONTEXT=Data Source=skakus-db;Database=Skakus;User ID=sa;Password=myF4ncyP4ssw0rd!;Trust Server Certificate=True
+    restart: always
+    depends_on:
+      - skakus-db
+  skakus-db:
+    container_name: skakus-db
+    networks:
+      - skakus-net
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - '1433:1433'
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=_rooTrooT0
+networks:
+  skakus-net:
+    name: skakus-net
+    external: false
